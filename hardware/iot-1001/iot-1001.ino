@@ -6,7 +6,7 @@ char* ssid_password = "12345678";
 int brokerPort = 1883;
 char* brokerAddress = "broker-test.kiwimobility.com";
 
-char* topic = "iot";
+char* topic = "iot/1001";
 char* device = "iot-1001";
 char* device_id = "iot888888881001";
 int pulse = 5000;
