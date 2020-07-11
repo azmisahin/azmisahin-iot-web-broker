@@ -1,55 +1,31 @@
-// MQTT Library
-var mqtt = require("mqtt");
+var mosca = require("mosca");
 
-// Broker address is being restructured according to the current environment.
-var MQTT_URL = process.env.MQTT_URL || "mqtt://broker-test.kiwimobility.com";
-
-// Creating unique identity.
-var clientId = "app-" + Math.random().toString(16).substr(2, 8);
-
-// Connection definitions are being configured.
-var options = {
+var settings = {
   port: 1883,
-  clientId: clientId,
 };
 
-// Router
-var topic = "iot";
+var server = new mosca.Server(settings);
 
-// Create a client connection
-var client = mqtt.connect(MQTT_URL, options);
-
-/**
- * Socket Event Handler
- * @param {socket} client Client Information
- * @param {array} topic Topic List
- */
-function eventHandler(client, topic) {
-  // subscribe to a topic
-  client.subscribe(topic, function () {
-    // when a message arrives, do something with it
-    client.on("message", function (topic, data, packet) {
-      console.log("topic:", topic);
-      console.log("data:", data.toString());
-      //console.info("packet:", packet);
-      console.log("time:", new Date().toUTCString());
-      console.log("==================================================");
-    });
-  });
-}
-
-// When connected
-client.on("connect", function () {
-  // all topics are caught.
-  eventHandler(client, topic);
+server.on("clientConnected", function (client) {
+  console.log("client.id", client.id);
+  console.log("client.address", client.connection.stream.remoteAddress);
+  console.log("==================================================");
 });
 
-/**
- * Send Data
- */
-function sendData(topic, data) {
-  // Send
-  client.publish(topic, data, () => {});
-}
+// fired when a message is received
+server.on("published", function (packet, client) {
+  var message = packet.payload.toString("utf8");
+  console.log("messageId", packet.messageId);
+  console.log("payload", packet.payload);
+  console.log("qos", packet.qos);
+  console.log("retain", packet.retain);
+  console.log("message", message);
+  console.log("--------------------------------------------------");
+});
 
-sendData(topic, "1");
+server.on("ready", setup);
+
+// fired when the mqtt server is ready
+function setup() {
+  console.log("MQTT broker running");
+}

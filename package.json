@@ -11,7 +11,11 @@
     "type": "git",
     "url": "git+https://github.com/azmisahin/azmisahin-iot-web-broker.git"
   },
-  "keywords": ["mqtt","broker","iot"],
+  "keywords": [
+    "mqtt",
+    "broker",
+    "iot"
+  ],
   "author": "azmisahin@outlook.com",
   "license": "MIT",
   "bugs": {
